@@ -3,6 +3,11 @@ namespace SurveyBasket.API.Services;
 
 public class PollService : IPollService
 {
+    private readonly ILogger<int> _logger;
+    public PollService(ILogger<int> logger)
+    {
+        _logger = logger;
+    }
     private readonly List<Poll> _Polls = [
         new Poll{Id=1,Title="Title1",Description="Description1" },
         new Poll{Id=2,Title="Title2",Description="Description2" },
@@ -13,4 +18,11 @@ public class PollService : IPollService
         ];
     public IEnumerable<Poll> GetAll() => _Polls;
     public Poll? Get(int id) => _Polls.SingleOrDefault(p => p.Id == id);
+    
+    public Poll?Add(Poll poll) {
+        poll.Id = _Polls.Count + 1;
+        _Polls.Add(poll);
+        _logger.LogWarning((_Polls.Count).ToString());
+        return poll;
+    }
 }

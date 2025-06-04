@@ -11,7 +11,7 @@ builder.Services.AddSwaggerGen();
 
 // Register Services
 
-builder.Services.AddKeyedScoped<IPollService,PollService>("PollService");
+builder.Services.AddKeyedSingleton<IPollService,PollService>("PollService");
 
 
 
