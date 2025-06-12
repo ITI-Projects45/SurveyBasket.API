@@ -18,11 +18,27 @@ public class PollService : IPollService
         ];
     public IEnumerable<Poll> GetAll() => _Polls;
     public Poll? Get(int id) => _Polls.SingleOrDefault(p => p.Id == id);
-    
-    public Poll?Add(Poll poll) {
+
+    public Poll? Add(Poll poll)
+    {
         poll.Id = _Polls.Count + 1;
         _Polls.Add(poll);
         _logger.LogWarning((_Polls.Count).ToString());
         return poll;
+    }
+    public bool Update(int id, Poll poll)
+    {
+        Poll CurrentPoll = Get(id);
+        if (CurrentPoll is null) { return false; }
+        CurrentPoll.Description = poll.Description;
+        CurrentPoll.Title = poll.Title;
+        return true;
+    }
+    public bool Delete(int id)
+    {
+        Poll poll = Get(id);
+        if (poll is null) { return false; }
+        _Polls.Remove(poll);
+        return true;
     }
 }
