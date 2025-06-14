@@ -1,4 +1,14 @@
-﻿global using Microsoft.AspNetCore.Http;
+﻿global using Mapster;
+global using System.Reflection;
+global using MapsterMapper;
+global using Microsoft.Extensions.Logging.Abstractions;
+global using Microsoft.AspNetCore.Http;
 global using Microsoft.AspNetCore.Mvc;
 global using SurveyBasket.API.Models;
 global using SurveyBasket.API.Services;
+global using SurveyBasket.API.Contracts;
+global using SurveyBasket.API.Contracts.Requests;
+global using SurveyBasket.API.Contracts.Responces;
+global using MapsterMapper;
+global using SurveyBasket.API.Contracts.Requests;
+//global using SurveyBasket.API.Mapping;
