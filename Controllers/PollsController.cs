@@ -1,10 +1,15 @@
 ﻿
 
 
+using Microsoft.AspNetCore.Authorization;
+using SurveyBasket.API.Contracts.Polls;
+//using SurveyBasket.API.Contracts.Requests;
+
 namespace SurveyBasket.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PollsController([FromKeyedServices("PollService")] IPollService pollService) : ControllerBase
     {
         private readonly IPollService _pollService = pollService;

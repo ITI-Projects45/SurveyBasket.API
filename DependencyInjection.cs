@@ -1,4 +1,8 @@
-﻿using SurveyBasket.API.Persistence;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using SurveyBasket.API.Authentication;
+using SurveyBasket.API.Persistence;
+using System.Text;
 
 namespace SurveyBasket.API;
 
@@ -12,7 +16,8 @@ public static class DependencyInjection
         services
             .AddSwaggerServices()
             .AddMapsterConfig()
-            .AddFluentValidationConfig();
+            .AddFluentValidationConfig()
+            .AddAuthConfig();
 
         // Register Services
         services.RegisteredServices();
@@ -56,6 +61,35 @@ public static class DependencyInjection
         services
             .AddFluentValidationAutoValidation()
             .AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+        return services;
+    }
+    public static IServiceCollection AddAuthConfig(this IServiceCollection services)
+    {
+        services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IJWTProvider, JWTProvider>();
+        services.AddIdentity<ApplicationUser, IdentityRole>()
+            .AddEntityFrameworkStores<ApplicationDbContext>();
+
+        services.AddAuthentication(options =>
+        {
+            options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        }).AddJwtBearer(o =>
+        {
+            o.SaveToken = true;
+            o.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Zp20XzQDq5qLis6F9w436bjmitFcNO09")),
+                ValidateIssuer = true,
+                ValidIssuer = "SurveyBasket",
+                ValidateAudience = true,
+                ValidAudience = "SurveyBasket users",
+               ValidateLifetime = true,
+            };
+        }
+        );
+
         return services;
     }
 

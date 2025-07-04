@@ -1,6 +1,6 @@
-﻿
+﻿//using SurveyBasket.API.Contracts.Requests;
 
-namespace SurveyBasket.API.Contracts.Validations;
+namespace SurveyBasket.API.Contracts.Polls;
 
 public class PollRequestValidator :AbstractValidator<PollRequest>
 {
