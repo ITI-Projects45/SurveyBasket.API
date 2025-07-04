@@ -18,11 +18,14 @@ namespace SurveyBasket.API.Controllers
         public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
         {
             var polls = await _pollService.GetAllAsync(cancellationToken);
+
             var response = polls.Adapt<IEnumerable<PollResponse>>();
+
             return Ok(response);
         }
 
         [HttpGet("{id:int}")]
+        [Authorize]
         public async Task<IActionResult> Get([FromRoute] int id, CancellationToken cancellationToken = default)
         {
             Poll poll = await _pollService.GetAsync(id, cancellationToken);

@@ -66,7 +66,8 @@ public static class DependencyInjection
     public static IServiceCollection AddAuthConfig(this IServiceCollection services)
     {
         services.AddScoped<IAuthService, AuthService>();
-        services.AddScoped<IJWTProvider, JWTProvider>();
+        services.AddSingleton<IJWTProvider, JWTProvider>();
+
         services.AddIdentity<ApplicationUser, IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
 
@@ -74,21 +75,21 @@ public static class DependencyInjection
         {
             options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
             options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-        }).AddJwtBearer(o =>
+        })
+        .AddJwtBearer(o =>
         {
             o.SaveToken = true;
             o.TokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Zp20XzQDq5qLis6F9w436bjmitFcNO09")),
                 ValidateIssuer = true,
-                ValidIssuer = "SurveyBasket",
                 ValidateAudience = true,
-                ValidAudience = "SurveyBasket users",
-               ValidateLifetime = true,
+                ValidateLifetime = true,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("J7MfAb4WcAIMkkigVtIepIILOVJEjAcB")),
+                ValidIssuer = "SurveyBasketApp",
+                ValidAudience = "SurveyBasketApp users"
             };
-        }
-        );
+        });
 
         return services;
     }

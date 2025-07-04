@@ -8,31 +8,31 @@ namespace SurveyBasket.API.Authentication;
 
 public class JWTProvider : IJWTProvider
 {
-    public (string token, int expiresIn) GenerateToken(ApplicationUser applicationuser)
+    public (string token, int expiresIn) GenerateToken(ApplicationUser user)
     {
         Claim[] claims = [
-            new(JwtRegisteredClaimNames.Sub,applicationuser.Id),
-            new(JwtRegisteredClaimNames.Email,applicationuser.Email!),
-            new(JwtRegisteredClaimNames.GivenName,applicationuser.FirstName),
-            new(JwtRegisteredClaimNames.FamilyName,applicationuser.LastName),
-            new(JwtRegisteredClaimNames.Sub,applicationuser.Id),
-            new(JwtRegisteredClaimNames.Jti,Guid.NewGuid().ToString())
+            new(JwtRegisteredClaimNames.Sub, user.Id),
+            new(JwtRegisteredClaimNames.Email, user.Email!),
+            new(JwtRegisteredClaimNames.GivenName, user.FirstName),
+            new(JwtRegisteredClaimNames.FamilyName, user.LastName),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+        ];
 
-            ];
+        var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("J7MfAb4WcAIMkkigVtIepIILOVJEjAcB"));
 
-        var symmetricSecurityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("Zp20XzQDq5qLis6F9w436bjmitFcNO09"));
+        var singingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
 
-        var signingCredentials = new SigningCredentials(symmetricSecurityKey, SecurityAlgorithms.HmacSha256);
-
-        var ExpiresIn = 60 * 60; // 1 hour
+        //
+        var expiresIn = 30;
 
         var token = new JwtSecurityToken(
-            issuer: "SurveyBasket",
-            audience: "SurveyBasket users",
+            issuer: "SurveyBasketApp",
+            audience: "SurveyBasketApp users",
             claims: claims,
-            expires: DateTime.UtcNow.AddSeconds(ExpiresIn),
-            signingCredentials: signingCredentials
+            expires: DateTime.UtcNow.AddMinutes(expiresIn),
+            signingCredentials: singingCredentials
         );
-        return (token: new JwtSecurityTokenHandler().WriteToken(token), expiresIn: ExpiresIn);
+
+        return (token: new JwtSecurityTokenHandler().WriteToken(token), expiresIn: expiresIn * 60);
     }
 }
